@@ -9,17 +9,28 @@ const _userToken = fs.readFileSync('user.token');
 const _jwks_uri = fs.readFileSync('jwks_uri.json');
 const iss = 'https://cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_MUQxpBk7p'
 const context = { fail: (error) => { console.log('Context:  ' + error) } }
+
+
+
+
+
 const getMessageToken = async (userToken, botId) => {
-    const user = await verifyUserToken(userToken);
-    if (user) {
-        const message = { text: 'Message text', creationDate: 135165 }
-        console.log('------------------------------------');
-        console.log(user);
-        console.log('------------------------------------');
-        const { userId } = user as any
-
-        return createMessageToken(userId, botId, message)
-
+    try {
+        const user = await verifyUserToken(userToken);
+        
+        if (user) {
+            // Check the bot id conditions
+            const message = { text: 'Message text', creationDate: 135165, userName: user.username, isPreview: false, isOwner: true }
+            console.log('------------------------------------');
+            console.log(user);
+            console.log('------------------------------------');
+            const { userId } = user as any
+    
+            return createMessageToken(userId, botId, message)
+    
+        }
+    } catch (error) {
+        
     }
 }
 
